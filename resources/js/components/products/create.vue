@@ -3,7 +3,7 @@
         <h2 class="text-center">Créer un produit</h2>
         <div class="row">
             <div class="col-md-12">
-                <router-link :to="{ name: 'ProductIndex' }" class="btn btn-primary btn-sm float-right mb-2">Back</router-link>
+                <router-link :to="{ name: 'ProductIndex' }" class="btn btn-primary btn-sm float-right mb-2">Retour</router-link>
             </div>
         </div>
         <div class="row">
