@@ -11,15 +11,15 @@
                 <form>
                     <div class="form-group">
                         <label>Nom</label>
-                        <input type="text" class="form-control" v-model="product.name">
+                        <input type="text" class="form-control" v-model="affichageProduct.name">
                     </div>
                     <div class="form-group">
                         <label>Description</label>
-                        <textarea type="text" rows="5" class="form-control" v-model="product.description"></textarea>
+                        <textarea type="text" rows="5" class="form-control" v-model="affichageProduct.description"></textarea>
                     </div>
                     <div class="form-group">
                         <label>Prix</label>
-                        <input type="text" class="form-control" v-model="product.price">
+                        <input type="text" class="form-control" v-model="affichageProduct.price">
                     </div>
                     <button type="button" class="btn btn-primary" @click="updateProduct()"> Mettre à jour </button>
                 </form>
@@ -30,28 +30,25 @@
 
 <script>
     export default {
-        data() {
-            return {
-                product: {}
-            }
-        },
         mounted() {
             this.editProduct(this.$route.params.productId);
         },
-        methods: {
-            editProduct(productId) {
-                this.axios.get(`http://127.0.0.1:8000/api/products/${productId}`)
-                   .then((res) => {
-                       this.product = res.data;
-                   });
-            },
-            updateProduct() {
-                this.axios
-                    .patch(`http://127.0.0.1:8000/api/products/${this.$route.params.productId}`, this.product)
-                    .then((res) => {
-                        this.$router.push({ name: 'ProductIndex' });
-                    });
+        computed:{
+            affichageProduct(){
+                return this.$store.state.produit;
             }
+        },
+        methods: {
+            async editProduct(productId) {
+                let res = await this.axios.get(`http://127.0.0.1:8000/api/products/${productId}`);
+                    this.$store.commit('setProduct',res.data);
+            },
+           
+            async updateProduct() {
+                let res = await this.axios.patch(`http://127.0.0.1:8000/api/products/${this.$route.params.productId}`, this.affichageProduct);
+                    this.$router.push({ name: 'ProductIndex' });
+            }
+         
         }
     }
 </script>

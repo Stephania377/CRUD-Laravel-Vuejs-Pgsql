@@ -19,7 +19,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="(product, key) of products">
+                        <tr v-for="(product, key) of affichageProducts">
                             <td>{{ key+1 }}</td>
                             <td>{{ product.name }}</td>
                             <td>{{ product.description }}</td>
@@ -39,30 +39,35 @@
 </template>
 
 <script>
+
     export default {
         data() {
             return {
-                products: {}
+                products: {},
             }
         },
         created() {
             this.getProducts();
         },
+        computed:{
+            affichageProducts(){
+                return this.$store.state.produits;
+            }
+        },
+        
         methods: {
-            getProducts() {
-              this.axios.get('http://127.0.0.1:8000/api/products')
-                  .then(response => {
-                      this.products = response.data;
-                  });
+            async getProducts() {
+              let response = await this.axios.get('http://127.0.0.1:8000/api/products'); 
+              this.$store.commit('setProducts',response.data);
+              console.log(this.affichageProducts); 
             },
-            deleteProduct(productId) {
-                this.axios
-                    .delete(`http://127.0.0.1:8000/api/products/${productId}`)
-                    .then(response => {
-                        let i = this.products.map(data => data.id).indexOf(productId);
-                        this.products.splice(i, 1)
-                    });
+
+            async deleteProduct(productId) {
+                let response = await this.axios.delete(`http://127.0.0.1:8000/api/products/${productId}`);
+                let i = this.affichageProducts.map(data => data.id).indexOf(productId);
+                        this.affichageProducts.splice(i, 1)
             }
         }
     }
 </script>
+
